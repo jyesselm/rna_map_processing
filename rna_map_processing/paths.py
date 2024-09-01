@@ -10,7 +10,7 @@ def get_lib_path() -> Path:
     Returns:
         Path: The path to the library root directory.
     """
-    return Path(__file__).resolve().parent.parent
+    return Path(__file__).parent.parent
 
 
 def get_py_path() -> Path:

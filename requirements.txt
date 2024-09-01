@@ -1,0 +1,3 @@
+wheel>=0.22
+rna_seq_tools @ git+https://github.com/jyesselm/seq_tools@main
+rna_secstruct @ git+https://github.com/jyesselm/rna_secstruct@main

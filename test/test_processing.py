@@ -1,9 +1,14 @@
 import pytest
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from dms_3d_features.process_motifs import trim
+from seq_tools import to_rna
+
+from rna_map_processing.processing import trim, trim_p5_and_p3
+
+RESOURCE_PATH = Path(__file__).parent / "resources"
 
 
 class TestTrim:
@@ -58,3 +63,21 @@ class TestTrim:
         result = trim(df, 2, 2)
         assert result["sequence"].tolist() == ["CGAT"]
         assert np.array_equal(result["data"].iloc[0], np.array([3, 4, 5, 6]))
+
+
+def test_trim_p5_and_p3():
+    json_path = RESOURCE_PATH / "pd_map_AC_AA_104_109.json"
+    df = pd.read_json(json_path)
+    df = to_rna(df)
+    try:
+        df = trim_p5_and_p3(df)
+    except Exception as e:
+        pytest.fail(f"trim_p5_and_p3 raised an unexpected error: {e}")
+    assert not df.empty, "DataFrame should not be empty after trimming"
+
+
+def _test_data():
+    json_path = RESOURCE_PATH / "2024_07_24_nextseq_run14.json"
+    df = pd.read_json(json_path)
+    df = df.query("construct == 'pd_map_AC_AA_104_109'").reset_index(drop=True)
+    df.to_json(RESOURCE_PATH / "pd_map_AC_AA_104_109.json")

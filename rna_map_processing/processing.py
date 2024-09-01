@@ -1,16 +1,19 @@
 import pandas as pd
 from pathlib import Path
+from typing import List
 
 from seq_tools import has_5p_sequence, to_rna
-from seq_tools import trim as seq_ss_trim
 from seq_tools import SequenceStructure
 from seq_tools.structure import find as seq_ss_find
 from rna_secstruct import SecStruct, MotifSearchParams
 
 from rna_map_processing.paths import get_resources_path
+from rna_map_processing.logger import get_logger
+
+log = get_logger("processing")
 
 
-def get_preprocessed_data(path, sets) -> pd.DataFrame:
+def get_preprocessed_data(path: str, sets: List[str]) -> pd.DataFrame:
     dfs = []
     for run_name in sets:
         full_path = Path(path) / run_name / "analysis" / "summary.json"
@@ -34,7 +37,7 @@ def trim(df: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
         pd.DataFrame: A trimmed DataFrame with the 'sequence', 'structure', and 'data' columns adjusted to the specified indices.
     """
 
-    def trim_column(column, start, end):
+    def trim_column(column: pd.Series, start: int, end: int) -> pd.Series:
         if start == 0 and end == 0:
             return column
         if end == 0:
@@ -57,7 +60,9 @@ def trim(df: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
     return df
 
 
-def trim_p5_and_p3(df: pd.DataFrame, is_rna=True) -> pd.DataFrame:
+def trim_p5_and_p3(
+    df: pd.DataFrame, is_rna: bool = True, p3_length: int = 20
+) -> pd.DataFrame:
     """
     Trims the 5' and 3' ends of the data in the DataFrame.
 
@@ -75,7 +80,7 @@ def trim_p5_and_p3(df: pd.DataFrame, is_rna=True) -> pd.DataFrame:
         ValueError: If no common p5 sequence is found or the sequence is not registered in the CSV file.
 
     """
-    df_p5 = pd.read_csv(get_resources_path() / "csvs" / "p5_sequences.csv")
+    df_p5 = pd.read_csv(get_resources_path() / "p5_sequences.csv")
     if is_rna:
         df_p5 = to_rna(df_p5)
     common_p5_seq = ""
@@ -85,4 +90,4 @@ def trim_p5_and_p3(df: pd.DataFrame, is_rna=True) -> pd.DataFrame:
     if len(common_p5_seq) == 0:
         raise ValueError("No common p5 sequence found")
     log.debug(f"common p5 sequence: {common_p5_seq}")
-    return trim(df, len(common_p5_seq), 20)
+    return trim(df, len(common_p5_seq), p3_length)

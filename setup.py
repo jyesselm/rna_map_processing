@@ -35,7 +35,6 @@ setup(
     package_dir={"rna_map_processing": "rna_map_processing"},
     py_modules=[
         "rna_map_processing/analysis",
-        "rna_map_processing/cli",
         "rna_map_processing/paths",
         "rna_map_processing/processing",
         "rna_map_processing/search",
