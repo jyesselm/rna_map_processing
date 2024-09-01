@@ -26,15 +26,18 @@ def get_preprocessed_data(path: str, sets: List[str]) -> pd.DataFrame:
 
 def trim(df: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
     """
-    Trims the 'sequence', 'structure', and 'data' columns of the DataFrame to the given start and end indices.
+    Trims the 'sequence', 'structure', and 'data' columns of the DataFrame to the
+    given start and end indices.
 
     Args:
-        df (pd.DataFrame): A DataFrame with 'sequence', 'structure', and 'data' columns, where 'data' contains lists of numbers.
+        df (pd.DataFrame): A DataFrame with 'sequence', 'structure', and 'data'
+                           columns, where 'data' contains lists of numbers.
         start (int): The start index for trimming.
         end (int): The end index for trimming.
 
     Returns:
-        pd.DataFrame: A trimmed DataFrame with the 'sequence', 'structure', and 'data' columns adjusted to the specified indices.
+        pd.DataFrame: A trimmed DataFrame with the 'sequence', 'structure', and
+                      'data' columns adjusted to the specified indices.
     """
 
     def trim_column(column: pd.Series, start: int, end: int) -> pd.Series:
@@ -66,19 +69,23 @@ def trim_p5_and_p3(
     """
     Trims the 5' and 3' ends of the data in the DataFrame.
 
-    This function reads a CSV file containing p5 sequences, converts these sequences to RNA,
-    checks for a common p5 sequence in the given DataFrame, and trims the DataFrame based on
-    the length of this common p5 sequence and a fixed 3' end length.
+    This function reads a CSV file containing p5 sequences, converts these
+    sequences to RNA, checks for a common p5 sequence in the given DataFrame,
+    and trims the DataFrame based on the length of this common p5 sequence and
+    a fixed 3' end length.
 
     Args:
-        df (pd.DataFrame): A DataFrame with a 'data' column containing sequences as strings.
+        df (pd.DataFrame): A DataFrame with a 'data' column containing
+                           sequences as strings.
+        is_rna (bool): Flag indicating if the sequences are RNA. Default is True.
+        p3_length (int): Length of the 3' end to trim. Default is 20.
 
     Returns:
         pd.DataFrame: A trimmed DataFrame with the 5' and 3' ends trimmed.
 
     Raises:
-        ValueError: If no common p5 sequence is found or the sequence is not registered in the CSV file.
-
+        ValueError: If no common p5 sequence is found or the sequence is not
+                    registered in the CSV file.
     """
     df_p5 = pd.read_csv(get_resources_path() / "p5_sequences.csv")
     if is_rna:
