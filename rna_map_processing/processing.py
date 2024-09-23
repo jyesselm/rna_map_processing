@@ -3,9 +3,6 @@ from pathlib import Path
 from typing import List
 
 from seq_tools import has_5p_sequence, to_rna
-from seq_tools import SequenceStructure
-from seq_tools.structure import find as seq_ss_find
-from rna_secstruct import SecStruct, MotifSearchParams
 
 from rna_map_processing.paths import get_resources_path
 from rna_map_processing.logger import get_logger

@@ -11,6 +11,13 @@ from rna_map_processing.processing import trim, trim_p5_and_p3
 RESOURCE_PATH = Path(__file__).parent / "resources"
 
 
+def generate_sample_df():
+    json_path = RESOURCE_PATH / "2024_07_24_nextseq_run14.json"
+    df = pd.read_json(json_path)
+    df = df.query("construct == 'pd_map_AC_AA_104_109'").reset_index(drop=True)
+    df.to_json(RESOURCE_PATH / "pd_map_AC_AA_104_109.json")
+
+
 class TestTrim:
     @pytest.fixture
     def sample_df(self):
@@ -74,10 +81,3 @@ def test_trim_p5_and_p3():
     except Exception as e:
         pytest.fail(f"trim_p5_and_p3 raised an unexpected error: {e}")
     assert not df.empty, "DataFrame should not be empty after trimming"
-
-
-def _test_data():
-    json_path = RESOURCE_PATH / "2024_07_24_nextseq_run14.json"
-    df = pd.read_json(json_path)
-    df = df.query("construct == 'pd_map_AC_AA_104_109'").reset_index(drop=True)
-    df.to_json(RESOURCE_PATH / "pd_map_AC_AA_104_109.json")

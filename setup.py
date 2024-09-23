@@ -38,6 +38,7 @@ setup(
         "rna_map_processing/paths",
         "rna_map_processing/processing",
         "rna_map_processing/search",
+        "rna_map_processing/titration",
     ],
     include_package_data=True,
     install_requires=requirements,
